@@ -124,7 +124,7 @@ namespace Matrix.Sensors
         public XL2(List<XL2Metric> metrics, string range)
         {
             MetricsToRead = metrics;
-            ComPort = new SerialPort("COM4");
+            ComPort = new SerialPort("COM3");
             ComPort.Open();
             //ComPort.Write($"INPUT:RANGE {ConfigurationManager.AppSettings["XL2Range"]} \n");
             ComPort.Write($"INPUT:RANGE {range} \n");
@@ -176,6 +176,20 @@ namespace Matrix.Sensors
     {
         public abstract string Command { get; }
     }
+    //Start of data collection classes from XL2
+    public class IDN : XL2Metric
+    {
+        public override string Command => "*IDN\n";
+    }
+
+    public class MicType : XL2Metric
+    {
+        public override string Command => "CALI:MIC:TYPE?\n";
+    }
+    public class MicSens : XL2Metric
+    {
+        public override string Command => "CALIB:MIC:SENS:VALU?\n";
+    }
 
     public class LAEQ : XL2Metric
     {
@@ -185,8 +199,143 @@ namespace Matrix.Sensors
     public class LAFMAX : XL2Metric
     {
         public override string Command => "MEAS:SLM:123? LAFMAX\n";
-
     }
+
+    public class LAFMIN : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? LAFMIN\n";
+    }
+
+    public class LAF01 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? L1%\n";
+    }
+
+    public class LAF05 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? L5%\n";
+    }
+
+    public class LAF10 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? L10%\n";
+    }
+
+    public class LAF50 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? L50%\n";
+    }
+
+    public class LAF90 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? L90%\n";
+    }
+
+    public class LAF95 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? L95%\n";
+    }
+
+    public class LAF99 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? L99%\n";
+    }
+
+    public class LCEQ : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? LCEQ\n";
+    }
+
+    public class LCFMAX : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? LCFMAX\n";
+    }
+
+    public class LCFMIN : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? LCFMIN\n";
+    }
+
+    public class LZEQ : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? LZEQ\n";
+    }
+
+    public class LZFMAX : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? LZFMAX\n";
+    }
+
+    public class LZFMIN : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:123? LZFMIN\n";
+    }
+
+    // RTA results from XL2
+    public class RTAE : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? E\n";
+    }
+    public class RTAEQ : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? EQ\n";
+    }
+
+    public class RTAMAX : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? MAX\n";
+    }
+
+    public class RTAMIN : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? MIN\n";
+    }
+
+    public class RTA01 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? 1%\n";
+    }
+
+    public class RTA05 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? 5%\n";
+    }
+
+    public class RTA10 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? 10%\n";
+    }
+
+    public class RTA50 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? 50%\n";
+    }
+
+    public class RTA90 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? 90%\n";
+    }
+
+    public class RTA95 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? 95%\n";
+    }
+
+    public class RTA99 : XL2Metric
+    {
+        public override string Command => "MEAS:SLM:RTA? 99%\n";
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     public class XL2Reading : SensorReading
     {

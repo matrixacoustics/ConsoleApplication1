@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Timers;
+using MySql.Data.MySqlClient;
 
 namespace Matrix
 {
@@ -33,6 +34,10 @@ namespace Matrix
     // Static stuff exists once in memory no matter how many objects are created
     // Static stuff can be accessed without 'instantiating' up the class
 
+    public class MysqlInsert
+    {
+        MySqlConnection connection = new MySqlConnection("datasource=localhost; port=3306; username=root; password=matrix");
+    }
 
 
     public class Logger
@@ -61,7 +66,26 @@ namespace Matrix
                     metrics: new List<XL2Metric>
                     {
                         new LAEQ(),
-                        new LAFMAX()
+                        new LAFMAX(),
+                        new LAFMIN(),
+                        new LAF01(),
+                        new LAF05(),
+                        new LAF10(),
+                        new LAF50(),
+                        new LAF90(),
+                        new LAF95(),
+                        new LAF99(),
+                        new RTAEQ(),
+                        new RTAE(),
+                        new RTAMAX(),
+                        new RTAMIN(),
+                        new RTA01(),
+                        new RTA05(),
+                        new RTA10(),
+                        new RTA50(),
+                        new RTA90(),
+                        new RTA95(),
+                        new RTA99()
                     },
                     range: "MID"        
                 );
@@ -73,7 +97,7 @@ namespace Matrix
                 XL2,
             };
 
-            Timer = new Timer(5 * 1000);
+            Timer = new Timer(30 * 1000);
             Timer.Elapsed += OnTimer;
             Timer.AutoReset = true;
             Timer.Enabled = true;
