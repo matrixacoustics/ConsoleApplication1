@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Management;
 
 namespace Matrix.Sensors
 {
@@ -121,10 +122,26 @@ namespace Matrix.Sensors
         private SerialPort ComPort;
         private List<XL2Metric> MetricsToRead;
 
+
+
         public XL2(List<XL2Metric> metrics, string range)
         {
             MetricsToRead = metrics;
-            ComPort = new SerialPort("COM3");
+
+            // Create XL2 Com Port based on Vendor ID and Product ID
+            // Scan through each SerialPort registered in the WMI.
+            foreach (ManagementObject device in new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_SerialPort").Get())
+            {
+                // Select device based on VendorID.
+                if (device["PNPDeviceID"].ToString().Contains("VID_1A2B"))
+                {
+                    ComPort = new SerialPort(device["DeviceID"].ToString());
+                    //Console.WriteLine("created Xl2 port");
+                    //Console.WriteLine(ComPort.PortName);
+                }
+            }
+
+            //ComPort = new SerialPort(comName);//for use if the other method isn't working
             ComPort.Open();
             //ComPort.Write($"INPUT:RANGE {ConfigurationManager.AppSettings["XL2Range"]} \n");
             ComPort.Write($"INPUT:RANGE {range} \n");
@@ -179,7 +196,7 @@ namespace Matrix.Sensors
     //Start of data collection classes from XL2
     public class IDN : XL2Metric
     {
-        public override string Command => "*IDN\n";
+        public override string Command => "*IDN?\n";
     }
 
     public class MicType : XL2Metric
@@ -327,16 +344,7 @@ namespace Matrix.Sensors
     }
 
 
-
-
-
-
-
-
-
-
-
-
+    
     public class XL2Reading : SensorReading
     {
         public List<XL2MetricReading> MetricReadings;

@@ -1,12 +1,14 @@
 ﻿using Matrix.Sensors;
 using System;
 using System.Collections.Generic;
+using System.Management;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Timers;
-using MySql.Data.MySqlClient;
+using MatrixLogger;
+using System.IO.Ports;
 
 namespace Matrix
 {
@@ -14,8 +16,60 @@ namespace Matrix
     {
         static void Main(string[] args)
         {
+
             var logger = new Logger();
             while (true) { }
+
+            //using (RecipiesEntities context = new RecipiesEntities())
+            //{
+                //// Insert
+                ////Recipe recipe = new Recipe
+                ////{
+                ////    Name = "chicken salad"
+                ////};
+
+                //context.Recipes.Add(recipe);
+                //context.SaveChanges();
+
+
+
+                // Select
+                //Recipe recipe = context.Recipes.FirstOrDefault(r => r.Name == "chicken salad");
+
+                //Console.WriteLine(recipe.Id);
+
+                // Update
+                //Recipe recipe = context.Recipes.FirstOrDefault(r => r.Name == "chicken salad");
+                //recipe.Name = "Burger";
+                //context.SaveChanges();
+
+                //context.Categories.Add(new Category { Name = "Breakfast" });
+                //context.Categories.Add(new Category { Name = "Lunch" });
+
+                //context.SaveChanges();
+
+                //linking tabled data
+                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Breakfast");
+                //context.Recipes.Add(new Recipe { Name = "Cereal", CategoryId = category.Id });
+                //context.SaveChanges();
+
+                // using navigation property
+                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Lunch");
+                //context.Recipes.Add(new Recipe { Name = "Pizza", Category = category });
+                //context.SaveChanges();
+
+                // using category navigation property
+                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Lunch");
+                //category.Recipes.Add(new Recipe { Name = "Soup" });
+                //context.SaveChanges();
+
+                //Query
+                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Lunch");
+                //List<Recipe> recipes = category.Recipes.ToList();
+                //recipes.ForEach(r => Console.WriteLine(r.Name));
+
+            //}
+
         }
     }
 
@@ -33,11 +87,6 @@ namespace Matrix
     // Static
     // Static stuff exists once in memory no matter how many objects are created
     // Static stuff can be accessed without 'instantiating' up the class
-
-    public class MysqlInsert
-    {
-        MySqlConnection connection = new MySqlConnection("datasource=localhost; port=3306; username=root; password=matrix");
-    }
 
 
     public class Logger
@@ -65,6 +114,9 @@ namespace Matrix
             XL2 = new XL2(
                     metrics: new List<XL2Metric>
                     {
+                        new IDN(),
+                        new MicType(),
+                        new MicSens(),
                         new LAEQ(),
                         new LAFMAX(),
                         new LAFMIN(),
@@ -87,7 +139,7 @@ namespace Matrix
                         new RTA95(),
                         new RTA99()
                     },
-                    range: "MID"        
+                    range: "LOW"        
                 );
 
             Sensors = new List<Sensor>()
@@ -97,7 +149,7 @@ namespace Matrix
                 XL2,
             };
 
-            Timer = new Timer(30 * 1000);
+            Timer = new Timer(5 * 1000);
             Timer.Elapsed += OnTimer;
             Timer.AutoReset = true;
             Timer.Enabled = true;
@@ -120,8 +172,43 @@ namespace Matrix
                     {
                         var xl2Reading = measurement as XL2Reading;
 
+                        var SLMSerialNo = "";
                         // post to Simon :)
-                        xl2Reading.MetricReadings.ForEach(x => Console.WriteLine($"XL2's {x.Metric.GetType().Name} Measurment is {x.Measurement}"));
+                        //Console.WriteLine(xl2Reading.MetricReadings.Count());
+                        //xl2Reading.MetricReadings.ForEach(x => Console.WriteLine($"XL2's {x.Metric.GetType().Name} Measurment is {x.Measurement}"));
+                        //xl2Reading.MetricReadings.ForEach(delegate(String xl2reading.MetricReadings.Metric);
+                        foreach (var x in xl2Reading.MetricReadings)
+                        {
+                            if (x.Metric.GetType().Name.Contains("L"))
+                            {
+                                //Console.WriteLine(x.Metric.GetType().Name);
+                                //Console.WriteLine(x.Measurement);
+                            };
+                            if (x.Metric.GetType().Name.Contains("RTA"))
+                            {
+                                //Console.WriteLine(x.Metric.GetType().Name);
+                                //Console.WriteLine(x.Measurement);
+                            };
+                            if (x.Metric.GetType().Name.Contains("IDN"))
+                            {
+                                //Console.WriteLine(x.Metric.GetType().Name);
+                                List<string> idns = x.Measurement.Split(',').ToList<string>();
+                                SLMSerialNo = idns[2];
+                            };
+
+                        }
+
+                        //put in database
+                        using (LoggerEntities context = new LoggerEntities())
+                        {
+                            XL2Table CurMes = new XL2Table
+                            {
+                                SLMSerial = SLMSerialNo
+
+                            };
+                            context.XL2Table.Add(CurMes);
+                            context.SaveChanges();
+                        }
                     }
 
                     if (measurement is FineOffsetWeatherReading)

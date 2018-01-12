@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="LoggerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="XL2">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StartTimeOfMeasurement" Type="datetime2" Precision="7" />
+          <Property Name="GPSStartTimeOfMeasurement" Type="datetime2" Precision="7" />
+          <Property Name="SensorStartTimeOfMeasurement" Type="datetime2" Precision="7" />
+          <Property Name="SLMSerial" Type="nvarchar" MaxLength="50" />
+          <Property Name="MicType" Type="nchar" MaxLength="10" />
+          <Property Name="MeasureStatus" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="XL2Spectrum">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="XL2id" Type="int" Nullable="false" />
+          <Property Name="FreqWeight" Type="nchar" MaxLength="10" />
+          <Property Name="TimeWeight" Type="nchar" MaxLength="10" />
+          <Property Name="Metric" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Hz6" Type="nchar" MaxLength="10" />
+          <Property Name="Hz8" Type="nchar" MaxLength="10" />
+          <Property Name="Hz10" Type="nchar" MaxLength="10" />
+          <Property Name="Hz12" Type="nchar" MaxLength="10" />
+          <Property Name="Hz16" Type="nchar" MaxLength="10" />
+          <Property Name="Hz20" Type="nchar" MaxLength="10" />
+          <Property Name="Hz25" Type="nchar" MaxLength="10" />
+          <Property Name="Hz31" Type="nchar" MaxLength="10" />
+          <Property Name="Hz50" Type="nchar" MaxLength="10" />
+          <Property Name="Hz63" Type="nchar" MaxLength="10" />
+          <Property Name="Hz80" Type="nchar" MaxLength="10" />
+          <Property Name="Hz100" Type="nchar" MaxLength="10" />
+          <Property Name="Hz125" Type="nchar" MaxLength="10" />
+          <Property Name="Hz160" Type="nchar" MaxLength="10" />
+          <Property Name="Hz200" Type="nchar" MaxLength="10" />
+          <Property Name="Hz250" Type="nchar" MaxLength="10" />
+          <Property Name="Hz315" Type="nchar" MaxLength="10" />
+          <Property Name="Hz400" Type="nchar" MaxLength="10" />
+          <Property Name="Hz40" Type="nchar" MaxLength="10" />
+          <Property Name="Hz500" Type="nchar" MaxLength="10" />
+          <Property Name="Hz630" Type="nchar" MaxLength="10" />
+          <Property Name="Hz800" Type="nchar" MaxLength="10" />
+          <Property Name="Hz1000" Type="nchar" MaxLength="10" />
+          <Property Name="Hz1250" Type="nchar" MaxLength="10" />
+          <Property Name="Hz1600" Type="nchar" MaxLength="10" />
+          <Property Name="Hz2000" Type="nchar" MaxLength="10" />
+          <Property Name="Hz2500" Type="nchar" MaxLength="10" />
+          <Property Name="Hz3150" Type="nchar" MaxLength="10" />
+          <Property Name="Hz4000" Type="nchar" MaxLength="10" />
+          <Property Name="Hz5000" Type="nchar" MaxLength="10" />
+          <Property Name="Hz6300" Type="nchar" MaxLength="10" />
+          <Property Name="Hz8000" Type="nchar" MaxLength="10" />
+          <Property Name="Hz10000" Type="nchar" MaxLength="10" />
+          <Property Name="Hz12500" Type="nchar" MaxLength="10" />
+          <Property Name="Hz16000" Type="nchar" MaxLength="10" />
+          <Property Name="Hz20000" Type="nchar" MaxLength="10" />
+          <Property Name="Overall" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <Association Name="FK_XL2Spectrum_ToTable">
+          <End Role="XL2" Type="Self.XL2" Multiplicity="1" />
+          <End Role="XL2Spectrum" Type="Self.XL2Spectrum" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="XL2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="XL2Spectrum">
+              <PropertyRef Name="XL2id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LoggerModelStoreContainer">
+          <EntitySet Name="XL2" EntityType="Self.XL2" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="XL2Spectrum" EntityType="Self.XL2Spectrum" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_XL2Spectrum_ToTable" Association="Self.FK_XL2Spectrum_ToTable">
+            <End Role="XL2" EntitySet="XL2" />
+            <End Role="XL2Spectrum" EntitySet="XL2Spectrum" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LoggerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="XL2Table">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StartTimeOfMeasurement" Type="DateTime" Precision="7" />
+          <Property Name="GPSStartTimeOfMeasurement" Type="DateTime" Precision="7" />
+          <Property Name="SensorStartTimeOfMeasurement" Type="DateTime" Precision="7" />
+          <Property Name="SLMSerial" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MicType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="MeasureStatus" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="XL2Spectrum" Relationship="LoggerModel.FK_XL2Spectrum_ToTable" FromRole="XL2" ToRole="XL2Spectrum" />
+        </EntityType>
+        <EntityType Name="XL2Spectrum">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="XL2id" Type="Int32" Nullable="false" />
+          <Property Name="FreqWeight" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="TimeWeight" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Metric" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Hz6" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz8" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz10" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz12" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz16" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz20" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz25" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz31" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz50" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz63" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz80" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz100" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz125" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz160" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz200" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz250" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz315" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz400" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz40" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz500" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz630" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz800" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz1000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz1250" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz1600" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz2000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz2500" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz3150" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz4000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz5000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz6300" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz8000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz10000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz12500" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz16000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Hz20000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Overall" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="XL2" Relationship="LoggerModel.FK_XL2Spectrum_ToTable" FromRole="XL2Spectrum" ToRole="XL2" />
+        </EntityType>
+        <EntityContainer Name="LoggerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="XL2Table" EntityType="LoggerModel.XL2Table" />
+          <EntitySet Name="XL2Spectrum" EntityType="Self.XL2Spectrum" />
+          <AssociationSet Name="FK_XL2Spectrum_ToTable" Association="LoggerModel.FK_XL2Spectrum_ToTable">
+            <End Role="XL2" EntitySet="XL2Table" />
+            <End Role="XL2Spectrum" EntitySet="XL2Spectrum" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_XL2Spectrum_ToTable">
+          <End Type="LoggerModel.XL2Table" Role="XL2" Multiplicity="1" />
+          <End Type="LoggerModel.XL2Spectrum" Role="XL2Spectrum" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="XL2">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="XL2Spectrum">
+              <PropertyRef Name="XL2id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LoggerModelStoreContainer" CdmEntityContainer="LoggerEntities">
+          <EntitySetMapping Name="XL2Table">
+            <EntityTypeMapping TypeName="LoggerModel.XL2Table">
+              <MappingFragment StoreEntitySet="XL2">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StartTimeOfMeasurement" ColumnName="StartTimeOfMeasurement" />
+                <ScalarProperty Name="GPSStartTimeOfMeasurement" ColumnName="GPSStartTimeOfMeasurement" />
+                <ScalarProperty Name="SensorStartTimeOfMeasurement" ColumnName="SensorStartTimeOfMeasurement" />
+                <ScalarProperty Name="SLMSerial" ColumnName="SLMSerial" />
+                <ScalarProperty Name="MicType" ColumnName="MicType" />
+                <ScalarProperty Name="MeasureStatus" ColumnName="MeasureStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="XL2Spectrum">
+            <EntityTypeMapping TypeName="LoggerModel.XL2Spectrum">
+              <MappingFragment StoreEntitySet="XL2Spectrum">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="XL2id" ColumnName="XL2id" />
+                <ScalarProperty Name="FreqWeight" ColumnName="FreqWeight" />
+                <ScalarProperty Name="TimeWeight" ColumnName="TimeWeight" />
+                <ScalarProperty Name="Metric" ColumnName="Metric" />
+                <ScalarProperty Name="Hz6" ColumnName="Hz6" />
+                <ScalarProperty Name="Hz8" ColumnName="Hz8" />
+                <ScalarProperty Name="Hz10" ColumnName="Hz10" />
+                <ScalarProperty Name="Hz12" ColumnName="Hz12" />
+                <ScalarProperty Name="Hz16" ColumnName="Hz16" />
+                <ScalarProperty Name="Hz20" ColumnName="Hz20" />
+                <ScalarProperty Name="Hz25" ColumnName="Hz25" />
+                <ScalarProperty Name="Hz31" ColumnName="Hz31" />
+                <ScalarProperty Name="Hz50" ColumnName="Hz50" />
+                <ScalarProperty Name="Hz63" ColumnName="Hz63" />
+                <ScalarProperty Name="Hz80" ColumnName="Hz80" />
+                <ScalarProperty Name="Hz100" ColumnName="Hz100" />
+                <ScalarProperty Name="Hz125" ColumnName="Hz125" />
+                <ScalarProperty Name="Hz160" ColumnName="Hz160" />
+                <ScalarProperty Name="Hz200" ColumnName="Hz200" />
+                <ScalarProperty Name="Hz250" ColumnName="Hz250" />
+                <ScalarProperty Name="Hz315" ColumnName="Hz315" />
+                <ScalarProperty Name="Hz400" ColumnName="Hz400" />
+                <ScalarProperty Name="Hz40" ColumnName="Hz40" />
+                <ScalarProperty Name="Hz500" ColumnName="Hz500" />
+                <ScalarProperty Name="Hz630" ColumnName="Hz630" />
+                <ScalarProperty Name="Hz800" ColumnName="Hz800" />
+                <ScalarProperty Name="Hz1000" ColumnName="Hz1000" />
+                <ScalarProperty Name="Hz1250" ColumnName="Hz1250" />
+                <ScalarProperty Name="Hz1600" ColumnName="Hz1600" />
+                <ScalarProperty Name="Hz2000" ColumnName="Hz2000" />
+                <ScalarProperty Name="Hz2500" ColumnName="Hz2500" />
+                <ScalarProperty Name="Hz3150" ColumnName="Hz3150" />
+                <ScalarProperty Name="Hz4000" ColumnName="Hz4000" />
+                <ScalarProperty Name="Hz5000" ColumnName="Hz5000" />
+                <ScalarProperty Name="Hz6300" ColumnName="Hz6300" />
+                <ScalarProperty Name="Hz8000" ColumnName="Hz8000" />
+                <ScalarProperty Name="Hz10000" ColumnName="Hz10000" />
+                <ScalarProperty Name="Hz12500" ColumnName="Hz12500" />
+                <ScalarProperty Name="Hz16000" ColumnName="Hz16000" />
+                <ScalarProperty Name="Hz20000" ColumnName="Hz20000" />
+                <ScalarProperty Name="Overall" ColumnName="Overall" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
