@@ -139,7 +139,15 @@ namespace Matrix
                         new RTA95(),
                         new RTA99()
                     },
-                    range: "LOW"        
+                    range: "LOW",
+                    RTAFreq: "Z",
+                    RTATime: "F",
+                    phan: "ON",
+                    klock: "OFF",
+                    Spk: "OFF",
+                    SpkLvl: "50",
+                    Input: "XLR",
+                    RTARes: "TERZ"
                 );
 
             Sensors = new List<Sensor>()
@@ -162,6 +170,7 @@ namespace Matrix
             try
             {
                 Sensors.ForEach(x => x.CompleteMeasurementPeriod());
+                //System.Threading.Thread.Sleep(500);
                 Sensors.ForEach(x => x.CommenceMeasurementPeriod());
 
                 foreach (var s in Sensors)
@@ -173,28 +182,60 @@ namespace Matrix
                         var xl2Reading = measurement as XL2Reading;
 
                         var SLMSerialNo = "";
+                        var micSens = "";
+                        var micType = "";
+                        var RTAs = "";
+                        var measStat = "";
+
                         // post to Simon :)
                         //Console.WriteLine(xl2Reading.MetricReadings.Count());
                         //xl2Reading.MetricReadings.ForEach(x => Console.WriteLine($"XL2's {x.Metric.GetType().Name} Measurment is {x.Measurement}"));
                         //xl2Reading.MetricReadings.ForEach(delegate(String xl2reading.MetricReadings.Metric);
+
+                        //RTAs = xl2Reading.MetricReadings.Where(n => n.Metric.GetType().Name.Contains("RTA"));
+
                         foreach (var x in xl2Reading.MetricReadings)
                         {
                             if (x.Metric.GetType().Name.Contains("L"))
                             {
-                                //Console.WriteLine(x.Metric.GetType().Name);
-                                //Console.WriteLine(x.Measurement);
+                                if (x.Metric.GetType().Name.Contains("EQ"))
+                                {
+                                    //Console.WriteLine(x.Metric.GetType().Name);
+                                    //Console.WriteLine(x.Measurement);
+                                    List<string> p = x.Measurement.Split(',').ToList<string>();
+                                    measStat = p[1];
+                                    Console.WriteLine(measStat);
+                                }
                             };
                             if (x.Metric.GetType().Name.Contains("RTA"))
                             {
+                                Console.WriteLine("Found RTA");
+                                if(x.Metric.GetType().Name.Contains("50"))
+                                {
+                                    //Console.WriteLine("Found 50");
+                                    //split data
+                                    List<string> datas = x.Measurement.Split(',').ToList<string>();
+
+                                };
                                 //Console.WriteLine(x.Metric.GetType().Name);
                                 //Console.WriteLine(x.Measurement);
                             };
                             if (x.Metric.GetType().Name.Contains("IDN"))
                             {
                                 //Console.WriteLine(x.Metric.GetType().Name);
-                                List<string> idns = x.Measurement.Split(',').ToList<string>();
-                                SLMSerialNo = idns[2];
+                                List<string> p = x.Measurement.Split(',').ToList<string>();
+                                SLMSerialNo = p[2];
                             };
+                            if (x.Metric.GetType().Name.Contains("MicSens"))
+                            {
+                                List<string> p = x.Measurement.Split(',').ToList<string>();
+                                micSens = p[0];
+                            }
+                            if (x.Metric.GetType().Name.Contains("MicType"))
+                            {
+                                List<string> p = x.Measurement.Split(',').ToList<string>();
+                                micType = p[0];
+                            }
 
                         }
 
@@ -203,7 +244,10 @@ namespace Matrix
                         {
                             XL2Table CurMes = new XL2Table
                             {
-                                SLMSerial = SLMSerialNo
+                                SLMSerial = SLMSerialNo,
+                                MicType = micType,
+                                MicSens = micSens,
+                                MeasureStatus = measStat
 
                             };
                             context.XL2Table.Add(CurMes);
@@ -255,6 +299,18 @@ namespace Matrix
         ONE_HOUR
     }
 
+    public class StrConcate
+    {
+        public static void StrCatList()
+        {
+            String numberlist = "";
+            for (int i=0; i <=100; i++)
+            {
+                numberlist += i + " ";
+            }
+            Console.WriteLine(numberlist);
+        }
+    }
 
 
 }

@@ -14,12 +14,6 @@ namespace MatrixLogger
     
     public partial class XL2Table
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public XL2Table()
-        {
-            this.XL2Spectrum = new HashSet<XL2Spectrum>();
-        }
-    
         public int Id { get; set; }
         public Nullable<System.DateTime> StartTimeOfMeasurement { get; set; }
         public Nullable<System.DateTime> GPSStartTimeOfMeasurement { get; set; }
@@ -27,8 +21,6 @@ namespace MatrixLogger
         public string SLMSerial { get; set; }
         public string MicType { get; set; }
         public string MeasureStatus { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<XL2Spectrum> XL2Spectrum { get; set; }
+        public string MicSens { get; set; }
     }
 }

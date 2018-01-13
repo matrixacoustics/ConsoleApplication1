@@ -16,13 +16,14 @@
           <Property Name="SLMSerial" Type="nvarchar" MaxLength="50" />
           <Property Name="MicType" Type="nchar" MaxLength="10" />
           <Property Name="MeasureStatus" Type="nchar" MaxLength="10" />
+          <Property Name="MicSens" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="XL2Spectrum">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="XL2id" Type="int" Nullable="false" />
+          <Property Name="XL2id" Type="int" />
           <Property Name="FreqWeight" Type="nchar" MaxLength="10" />
           <Property Name="TimeWeight" Type="nchar" MaxLength="10" />
           <Property Name="Metric" Type="nchar" MaxLength="10" Nullable="false" />
@@ -64,25 +65,9 @@
           <Property Name="Hz20000" Type="nchar" MaxLength="10" />
           <Property Name="Overall" Type="nchar" MaxLength="10" />
         </EntityType>
-        <Association Name="FK_XL2Spectrum_ToTable">
-          <End Role="XL2" Type="Self.XL2" Multiplicity="1" />
-          <End Role="XL2Spectrum" Type="Self.XL2Spectrum" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="XL2">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="XL2Spectrum">
-              <PropertyRef Name="XL2id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="LoggerModelStoreContainer">
           <EntitySet Name="XL2" EntityType="Self.XL2" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="XL2Spectrum" EntityType="Self.XL2Spectrum" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_XL2Spectrum_ToTable" Association="Self.FK_XL2Spectrum_ToTable">
-            <End Role="XL2" EntitySet="XL2" />
-            <End Role="XL2Spectrum" EntitySet="XL2Spectrum" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -99,14 +84,14 @@
           <Property Name="SLMSerial" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="MicType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="MeasureStatus" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="XL2Spectrum" Relationship="LoggerModel.FK_XL2Spectrum_ToTable" FromRole="XL2" ToRole="XL2Spectrum" />
+          <Property Name="MicSens" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="XL2Spectrum">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="XL2id" Type="Int32" Nullable="false" />
+          <Property Name="XL2id" Type="Int32" />
           <Property Name="FreqWeight" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="TimeWeight" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Metric" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
@@ -147,28 +132,11 @@
           <Property Name="Hz16000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Hz20000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Overall" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="XL2" Relationship="LoggerModel.FK_XL2Spectrum_ToTable" FromRole="XL2Spectrum" ToRole="XL2" />
         </EntityType>
         <EntityContainer Name="LoggerEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="XL2Table" EntityType="LoggerModel.XL2Table" />
           <EntitySet Name="XL2Spectrum" EntityType="Self.XL2Spectrum" />
-          <AssociationSet Name="FK_XL2Spectrum_ToTable" Association="LoggerModel.FK_XL2Spectrum_ToTable">
-            <End Role="XL2" EntitySet="XL2Table" />
-            <End Role="XL2Spectrum" EntitySet="XL2Spectrum" />
-          </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_XL2Spectrum_ToTable">
-          <End Type="LoggerModel.XL2Table" Role="XL2" Multiplicity="1" />
-          <End Type="LoggerModel.XL2Spectrum" Role="XL2Spectrum" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="XL2">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="XL2Spectrum">
-              <PropertyRef Name="XL2id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -178,6 +146,7 @@
           <EntitySetMapping Name="XL2Table">
             <EntityTypeMapping TypeName="LoggerModel.XL2Table">
               <MappingFragment StoreEntitySet="XL2">
+                <ScalarProperty Name="MicSens" ColumnName="MicSens" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="StartTimeOfMeasurement" ColumnName="StartTimeOfMeasurement" />
                 <ScalarProperty Name="GPSStartTimeOfMeasurement" ColumnName="GPSStartTimeOfMeasurement" />

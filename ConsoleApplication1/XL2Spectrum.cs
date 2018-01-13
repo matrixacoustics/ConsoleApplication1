@@ -15,7 +15,7 @@ namespace MatrixLogger
     public partial class XL2Spectrum
     {
         public int Id { get; set; }
-        public int XL2id { get; set; }
+        public Nullable<int> XL2id { get; set; }
         public string FreqWeight { get; set; }
         public string TimeWeight { get; set; }
         public string Metric { get; set; }
@@ -56,7 +56,5 @@ namespace MatrixLogger
         public string Hz16000 { get; set; }
         public string Hz20000 { get; set; }
         public string Overall { get; set; }
-    
-        public virtual XL2Table XL2 { get; set; }
     }
 }

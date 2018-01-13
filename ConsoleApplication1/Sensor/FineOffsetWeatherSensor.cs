@@ -124,7 +124,7 @@ namespace Matrix.Sensors
 
 
 
-        public XL2(List<XL2Metric> metrics, string range)
+        public XL2(List<XL2Metric> metrics, string range, string RTAFreq, string RTATime, string phan, string klock, string Spk, string SpkLvl, string Input, string RTARes)
         {
             MetricsToRead = metrics;
 
@@ -143,8 +143,19 @@ namespace Matrix.Sensors
 
             //ComPort = new SerialPort(comName);//for use if the other method isn't working
             ComPort.Open();
-            //ComPort.Write($"INPUT:RANGE {ConfigurationManager.AppSettings["XL2Range"]} \n");
+            ComPort.Write("INIT STOP\n");
+            //System.Threading.Thread.Sleep(100);
             ComPort.Write($"INPUT:RANGE {range} \n");
+            //System.Threading.Thread.Sleep(100);
+            ComPort.Write($"MEAS:SLM:RTA:WEIG {RTAFreq}{RTATime} \n"); //
+            ComPort.Write($"INPU:PHAN {phan} \n");
+            ComPort.Write($"SYST:KLOC {klock} \n");
+            ComPort.Write($"SYST:SPEA:ONOF {Spk}");
+            ComPort.Write($"SYST:SPEA:LEVE {SpkLvl} \n");
+            ComPort.Write($"INPU:SELE {Input} \n");
+            ComPort.Write($"MEA:SLM:RTA:RESO {RTARes} \n");
+            Console.WriteLine("XL2 initialse strings sent");
+
         }
 
         protected override void CommenceMeasurement()
@@ -154,6 +165,7 @@ namespace Matrix.Sensors
             {
                 ComPort.Open();
             }
+            System.Threading.Thread.Sleep(100);
             ComPort.Write("INIT START\n");
         }
 
