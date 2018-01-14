@@ -20,56 +20,6 @@ namespace Matrix
             var logger = new Logger();
             while (true) { }
 
-            //using (RecipiesEntities context = new RecipiesEntities())
-            //{
-                //// Insert
-                ////Recipe recipe = new Recipe
-                ////{
-                ////    Name = "chicken salad"
-                ////};
-
-                //context.Recipes.Add(recipe);
-                //context.SaveChanges();
-
-
-
-                // Select
-                //Recipe recipe = context.Recipes.FirstOrDefault(r => r.Name == "chicken salad");
-
-                //Console.WriteLine(recipe.Id);
-
-                // Update
-                //Recipe recipe = context.Recipes.FirstOrDefault(r => r.Name == "chicken salad");
-                //recipe.Name = "Burger";
-                //context.SaveChanges();
-
-                //context.Categories.Add(new Category { Name = "Breakfast" });
-                //context.Categories.Add(new Category { Name = "Lunch" });
-
-                //context.SaveChanges();
-
-                //linking tabled data
-                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Breakfast");
-                //context.Recipes.Add(new Recipe { Name = "Cereal", CategoryId = category.Id });
-                //context.SaveChanges();
-
-                // using navigation property
-                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Lunch");
-                //context.Recipes.Add(new Recipe { Name = "Pizza", Category = category });
-                //context.SaveChanges();
-
-                // using category navigation property
-                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Lunch");
-                //category.Recipes.Add(new Recipe { Name = "Soup" });
-                //context.SaveChanges();
-
-                //Query
-                //Category category = context.Categories.FirstOrDefault(c => c.Name == "Lunch");
-                //List<Recipe> recipes = category.Recipes.ToList();
-                //recipes.ForEach(r => Console.WriteLine(r.Name));
-
-            //}
-
         }
     }
 
@@ -117,7 +67,7 @@ namespace Matrix
                         new IDN(),
                         new MicType(),
                         new MicSens(),
-                        new LAEQ(),
+                        //new LAEQ(),
                         new LAFMAX(),
                         new LAFMIN(),
                         new LAF01(),
@@ -139,15 +89,15 @@ namespace Matrix
                         new RTA95(),
                         new RTA99()
                     },
-                    range: "LOW",
-                    RTAFreq: "Z",
-                    RTATime: "F",
-                    phan: "ON",
-                    klock: "OFF",
-                    Spk: "OFF",
-                    SpkLvl: "50",
-                    Input: "XLR",
-                    RTARes: "TERZ"
+                    range: "LOW", // LOW MED HIGH
+                    RTAFreq: "Z", // Z A C
+                    RTATime: "F", // F S
+                    phan: "ON", // ON OFF - should be on for microphone to work
+                    klock: "OFF", // Key lock - should mostly be off
+                    Spk: "OFF", // needs to be on for the headphone output to work
+                    SpkLvl: "50", // level 0-60 for the output of the speaker or headphone
+                    Input: "XLR", // XLR or RCA
+                    RTARes: "TERZ" // OCT or TERZ - terz is 3rd octave
                 );
 
             Sensors = new List<Sensor>()
@@ -170,7 +120,7 @@ namespace Matrix
             try
             {
                 Sensors.ForEach(x => x.CompleteMeasurementPeriod());
-                //System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(500);
                 Sensors.ForEach(x => x.CommenceMeasurementPeriod());
 
                 foreach (var s in Sensors)
@@ -181,11 +131,12 @@ namespace Matrix
                     {
                         var xl2Reading = measurement as XL2Reading;
 
-                        var SLMSerialNo = "";
-                        var micSens = "";
-                        var micType = "";
-                        var RTAs = "";
+                        var SLMSerialNo = "";//
+                        var micSens = "";//
+                        var micType = "";//
+                        var RTAs = "";//
                         var measStat = "";
+                        var LAEQ = "";//
 
                         // post to Simon :)
                         //Console.WriteLine(xl2Reading.MetricReadings.Count());
@@ -193,66 +144,135 @@ namespace Matrix
                         //xl2Reading.MetricReadings.ForEach(delegate(String xl2reading.MetricReadings.Metric);
 
                         //RTAs = xl2Reading.MetricReadings.Where(n => n.Metric.GetType().Name.Contains("RTA"));
+                        LoggerEntities LE = new LoggerEntities();
+                        List<XL2Spectrum> specPost = new List<XL2Spectrum>();
+
+                        List<string> measChannels = new List<string>();
+                        measChannels.Add("L");
+                        measChannels.Add("RTA");
+
+                        List<string> freqWeight = new List<string>();
+                        freqWeight.Add("A");
+                        freqWeight.Add("C");
+                        freqWeight.Add("Z");
+
+                        List<string> timeWeight = new List<string>();
+                        timeWeight.Add("F");
+                        timeWeight.Add("S");
+                        timeWeight.Add("I");
+
+                        List<string> metrics = new List<string>();
+                        metrics.Add("EQ");
+                        metrics.Add("MAX");
+                        metrics.Add("MIN");
+                        metrics.Add("01");
+                        metrics.Add("05");
+                        metrics.Add("10");
+                        metrics.Add("50");
+                        metrics.Add("90");
+                        metrics.Add("95");
+                        metrics.Add("99");
 
                         foreach (var x in xl2Reading.MetricReadings)
                         {
-                            if (x.Metric.GetType().Name.Contains("L"))
+                            Console.WriteLine(x.Metric.GetType().Name);
+                            foreach (string m in measChannels)
                             {
-                                if (x.Metric.GetType().Name.Contains("EQ"))
+                                //Console.WriteLine(n);
+                                foreach (string n in freqWeight)
                                 {
-                                    //Console.WriteLine(x.Metric.GetType().Name);
-                                    //Console.WriteLine(x.Measurement);
-                                    List<string> p = x.Measurement.Split(',').ToList<string>();
-                                    measStat = p[1];
-                                    Console.WriteLine(measStat);
-                                }
-                            };
-                            if (x.Metric.GetType().Name.Contains("RTA"))
-                            {
-                                Console.WriteLine("Found RTA");
-                                if(x.Metric.GetType().Name.Contains("50"))
-                                {
-                                    //Console.WriteLine("Found 50");
-                                    //split data
-                                    List<string> datas = x.Measurement.Split(',').ToList<string>();
+                                    //Console.WriteLine(m);
+                                    foreach (string o in timeWeight)
+                                    {
+                                        //Console.WriteLine(o);
+                                        foreach (string p in metrics)
+                                        {
+                                            //Console.WriteLine(p);
+                                            if (x.Metric.GetType().Name.Contains(m))
+                                            {
+                                                if (x.Metric.GetType().Name.Contains(n))
+                                                {
+                                                    if (x.Metric.GetType().Name.Contains(o))
+                                                    {
+                                                        if (x.Metric.GetType().Name.Contains(p))
+                                                        {
+                                                            //Console.WriteLine(x.Metric.GetType().Name);
+                                                            //Console.WriteLine(x.Measurement);
+                                                            Console.WriteLine(m + n + o + p);
+                                                            List<string> q = x.Measurement.Split(',').ToList<string>();
+                                                            measStat = q[1];
+                                                            //Console.WriteLine(measStat);
+                                                            Console.WriteLine(char.ToString(measStat[0]));
+                                                            specPost.Add(new XL2Spectrum()
+                                                            {
+                                                                XL2id = 1,
+                                                                InChn = n,
+                                                                FreqWeight = m,
+                                                                Metric = o,
+                                                                Overall = q[0]
+                                                            }
+                                                            );
 
-                                };
-                                //Console.WriteLine(x.Metric.GetType().Name);
-                                //Console.WriteLine(x.Measurement);
-                            };
-                            if (x.Metric.GetType().Name.Contains("IDN"))
-                            {
-                                //Console.WriteLine(x.Metric.GetType().Name);
-                                List<string> p = x.Measurement.Split(',').ToList<string>();
-                                SLMSerialNo = p[2];
-                            };
-                            if (x.Metric.GetType().Name.Contains("MicSens"))
-                            {
-                                List<string> p = x.Measurement.Split(',').ToList<string>();
-                                micSens = p[0];
+                                                            specPost.ForEach(Console.WriteLine);
+
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            if (x.Metric.GetType().Name.Contains("MicType"))
-                            {
-                                List<string> p = x.Measurement.Split(',').ToList<string>();
-                                micType = p[0];
-                            }
+                            //LE.XL2Spectrum.AddRange(specPost);
+                            //LE.SaveChanges();
+                            //if (x.Metric.GetType().Name.Contains("RTA"))
+                            //{
+                            //    //Console.WriteLine("Found RTA");
+                            //    if(x.Metric.GetType().Name.Contains("50"))
+                            //    {
+                            //        //Console.WriteLine("Found 50");
+                            //        //split data
+                            //        List<string> datas = x.Measurement.Split(',').ToList<string>();
+
+                            //    };
+                            //    //Console.WriteLine(x.Metric.GetType().Name);
+                            //    //Console.WriteLine(x.Measurement);
+                            //};
+                            //if (x.Metric.GetType().Name.Contains("IDN"))
+                            //{
+                            //    //Console.WriteLine(x.Metric.GetType().Name);
+                            //    List<string> p = x.Measurement.Split(',').ToList<string>();
+                            //    SLMSerialNo = p[2];
+                            //};
+                            //if (x.Metric.GetType().Name.Contains("MicSens"))
+                            //{
+                            //    List<string> p = x.Measurement.Split(',').ToList<string>();
+                            //    micSens = p[0];
+                            //}
+                            //if (x.Metric.GetType().Name.Contains("MicType"))
+                            //{
+                            //    List<string> p = x.Measurement.Split(',').ToList<string>();
+                            //    micType = p[0];
+                            //}
+
 
                         }
 
                         //put in database
-                        using (LoggerEntities context = new LoggerEntities())
-                        {
-                            XL2Table CurMes = new XL2Table
-                            {
-                                SLMSerial = SLMSerialNo,
-                                MicType = micType,
-                                MicSens = micSens,
-                                MeasureStatus = measStat
+                        //using (LoggerEntities context = new LoggerEntities())
+                        //{
+                        //    XL2Table CurMes = new XL2Table
+                        //    {
+                        //        SLMSerial = SLMSerialNo,
+                        //        MicType = micType,
+                        //        MicSens = micSens,
+                        //        MeasureStatus = measStat
 
-                            };
-                            context.XL2Table.Add(CurMes);
-                            context.SaveChanges();
-                        }
+                        //    };
+                        //    context.XL2Table.Add(CurMes);
+                        //    context.SaveChanges();
+                        //}
                     }
 
                     if (measurement is FineOffsetWeatherReading)
@@ -312,5 +332,61 @@ namespace Matrix
         }
     }
 
+    public class specPost
+    {
+        public string InChn { get; set; }
+        public string XL2id { get; set; }
+        public string FreqWeight { get; set; }
+        public string TimeWeight { get; set; }
+        public string Metric { get; set; }
+        public string Hz6 { get; set; }
+        public string Hz8 { get; set; }
+        public string Hz10 { get; set; }
+        public string Hz12 { get; set; }
+        public string Hz16 { get; set; }
+        public string Hz20 { get; set; }
+        public string Hz25 { get; set; }
+        public string Hz31 { get; set; }
+        public string Hz40 { get; set; }
+        public string Hz50 { get; set; }
+        public string Hz63 { get; set; }
+        public string Hz80 { get; set; }
+        public string Hz100 { get; set; }
+        public string Hz125 { get; set; }
+        public string Hz160 { get; set; }
+        public string Hz200 { get; set; }
+        public string Hz250 { get; set; }
+        public string Hz315 { get; set; }
+        public string Hz400 { get; set; }
+        public string Hz500 { get; set; }
+        public string Hz630 { get; set; }
+        public string Hz800 { get; set; }
+        public string Hz1000 { get; set; }
+        public string Hz1250 { get; set; }
+        public string Hz1600 { get; set; }
+        public string Hz2000 { get; set; }
+        public string Hz2500 { get; set; }
+        public string Hz3150 { get; set; }
+        public string Hz4000 { get; set; }
+        public string Hz5000 { get; set; }
+        public string Hz6300 { get; set; }
+        public string Hz8000 { get; set; }
+        public string Hz10000 { get; set; }
+        public string Hz12500 { get; set; }
+        public string Hz16000 { get; set; }
+        public string Hz20000 { get; set; }
+        public string Overall { get; set; }
+    }
+
+    public class XL2Post
+    {
+        public string StartTimeOfMeasurement { get; set; }
+        public string GPSStartTimeOfMeasurement{ get; set; }
+        public string SensorStartTimeOfMeasurement{ get; set; }
+        public string SLMSerial{ get; set; }
+        public string MicType{ get; set; }
+        public string MeasureStatus{ get; set; }
+        public string MicSens{ get; set; }
+}
 
 }

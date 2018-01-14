@@ -56,5 +56,6 @@ namespace MatrixLogger
         public string Hz16000 { get; set; }
         public string Hz20000 { get; set; }
         public string Overall { get; set; }
+        public string InChn { get; set; }
     }
 }

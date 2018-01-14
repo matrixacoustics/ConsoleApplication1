@@ -64,6 +64,7 @@
           <Property Name="Hz16000" Type="nchar" MaxLength="10" />
           <Property Name="Hz20000" Type="nchar" MaxLength="10" />
           <Property Name="Overall" Type="nchar" MaxLength="10" />
+          <Property Name="InChn" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityContainer Name="LoggerModelStoreContainer">
           <EntitySet Name="XL2" EntityType="Self.XL2" Schema="dbo" store:Type="Tables" />
@@ -132,6 +133,7 @@
           <Property Name="Hz16000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Hz20000" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Overall" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="InChn" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityContainer Name="LoggerEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="XL2Table" EntityType="LoggerModel.XL2Table" />
@@ -160,6 +162,7 @@
           <EntitySetMapping Name="XL2Spectrum">
             <EntityTypeMapping TypeName="LoggerModel.XL2Spectrum">
               <MappingFragment StoreEntitySet="XL2Spectrum">
+                <ScalarProperty Name="InChn" ColumnName="InChn" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="XL2id" ColumnName="XL2id" />
                 <ScalarProperty Name="FreqWeight" ColumnName="FreqWeight" />

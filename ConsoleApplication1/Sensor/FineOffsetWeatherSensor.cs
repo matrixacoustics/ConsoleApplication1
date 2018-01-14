@@ -142,12 +142,12 @@ namespace Matrix.Sensors
             }
 
             //ComPort = new SerialPort(comName);//for use if the other method isn't working
+
+            //Send initialisation settings to the logger.
             ComPort.Open();
             ComPort.Write("INIT STOP\n");
-            //System.Threading.Thread.Sleep(100);
             ComPort.Write($"INPUT:RANGE {range} \n");
-            //System.Threading.Thread.Sleep(100);
-            ComPort.Write($"MEAS:SLM:RTA:WEIG {RTAFreq}{RTATime} \n"); //
+            ComPort.Write($"MEAS:SLM:RTA:WEIG {RTAFreq}{RTATime} \n"); 
             ComPort.Write($"INPU:PHAN {phan} \n");
             ComPort.Write($"SYST:KLOC {klock} \n");
             ComPort.Write($"SYST:SPEA:ONOF {Spk}");
