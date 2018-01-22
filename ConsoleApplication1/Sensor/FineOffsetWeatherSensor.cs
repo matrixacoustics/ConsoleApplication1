@@ -8,22 +8,6 @@ using System.Management;
 
 namespace Matrix.Sensors
 {
-    
-    public class FineOffsetWeatherSensor : WeatherSensor
-    {
-        protected override SensorReading ReadValues()
-        {
-            return new FineOffsetWeatherReading() { };
-        }
-    }
-
-    public class FineOffsetWeatherReading : SensorReading
-    { }
-
-
-    // abstract = must be overwritten in a child class
-    // virtual = can be overwritten in a child class
-
     public abstract class Sensor
     {
         private Exception CommenceException = null;
@@ -89,12 +73,37 @@ namespace Matrix.Sensors
         protected abstract SensorReading ReadValues();
     }
 
-   
-
-    public abstract class WeatherSensor : Sensor
+    public class SensorReading
     {
 
     }
+
+    public class ErrorReadingSensor : SensorReading
+    {
+        public Exception CommenceException;
+        public Exception CompleteException;
+        public Exception ReadException;
+        public SensorReading Data;
+    }
+
+    public abstract class WeatherSensor : Sensor
+    {
+    }
+
+    public class FineOffsetWeatherSensor : WeatherSensor
+    {
+        protected override SensorReading ReadValues()
+        {
+            return new FineOffsetWeatherReading() { };
+        }
+    }
+
+    public class FineOffsetWeatherReading : SensorReading
+    { }
+
+
+    // abstract = must be overwritten in a child class
+    // virtual = can be overwritten in a child class
 
     public class DavisWeatherSensor : WeatherSensor
     {
@@ -103,11 +112,6 @@ namespace Matrix.Sensors
             return new FineOffsetWeatherReading() { };
 
         }
-    }
-
-    public class SensorReading
-    {
-
     }
 
 
@@ -205,6 +209,7 @@ namespace Matrix.Sensors
     {
         public abstract string Command { get; }
     }
+
     //Start of data collection classes from XL2
     public class IDN : XL2Metric
     {
@@ -362,13 +367,7 @@ namespace Matrix.Sensors
         public List<XL2MetricReading> MetricReadings;
     }
 
-    public class ErrorReadingSensor : SensorReading
-    {
-        public Exception CommenceException;
-        public Exception CompleteException;
-        public Exception ReadException;
-        public SensorReading Data;
-    }
+
 
     public class XL2MetricReading
     {
@@ -376,3 +375,4 @@ namespace Matrix.Sensors
         public string Measurement;
     }
 }
+

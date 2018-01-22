@@ -97,6 +97,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>RecipesModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Sensor\MeteostickSensor.cs" />
     <Compile Include="Sensor\FineOffsetWeatherSensor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

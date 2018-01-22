@@ -46,6 +46,7 @@ namespace Matrix
 
         // The sensors in this logger
         public DavisWeatherSensor DavisWeatherSensor;
+        public MeteostickSensor MeteostickSensor;
         public FineOffsetWeatherSensor FineOffsetWeatherSensor;
         public XL2 XL2;
 
@@ -61,13 +62,22 @@ namespace Matrix
             // if (ConfigurationManager.AppSettings["HasDavisWeatherSensor"] == true) 
             DavisWeatherSensor = new DavisWeatherSensor();
             FineOffsetWeatherSensor = new FineOffsetWeatherSensor();
+
+            MeteostickSensor = new MeteostickSensor(
+                metrics: new List<MeteostickSensorMetric>
+                {
+                    new windSpeed(),
+                }
+                );
+
+            //XL2 logger
             XL2 = new XL2(
                     metrics: new List<XL2Metric>
                     {
                         new IDN(),
                         new MicType(),
                         new MicSens(),
-                        //new LAEQ(),
+                        new LAEQ(),
                         new LAFMAX(),
                         new LAFMIN(),
                         new LAF01(),
@@ -102,8 +112,9 @@ namespace Matrix
 
             Sensors = new List<Sensor>()
             {
-                DavisWeatherSensor,
-                FineOffsetWeatherSensor,
+                //DavisWeatherSensor,
+                //FineOffsetWeatherSensor,
+                MeteostickSensor,
                 XL2,
             };
 
