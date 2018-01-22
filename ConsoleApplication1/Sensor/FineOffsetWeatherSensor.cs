@@ -191,13 +191,16 @@ namespace Matrix.Sensors
                             Measurement = GetMeasurement(x)
                         }
                 ).ToList()
+                
             };
         }
 
         private string GetMeasurement(XL2Metric metric)
         {
             ComPort.Write(metric.Command);
-            return ComPort.ReadLine();
+            string MesOut =  ComPort.ReadLine();
+            List<string> MesSplit = MesOut.Split(',').ToList<string>();
+            return MesOut;
         }
     }
 
@@ -209,15 +212,19 @@ namespace Matrix.Sensors
     public class IDN : XL2Metric
     {
         public override string Command => "*IDN?\n";
+        public string SLMSerial { get; set; }
+        public string Firmware { get; set; }
     }
 
     public class MicType : XL2Metric
     {
         public override string Command => "CALI:MIC:TYPE?\n";
+        public string Type { get; set; }
     }
     public class MicSens : XL2Metric
     {
         public override string Command => "CALIB:MIC:SENS:VALU?\n";
+        public string Sens { get; set; }
     }
 
     public class LAEQ : XL2Metric

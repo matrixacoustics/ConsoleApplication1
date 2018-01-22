@@ -67,7 +67,7 @@ namespace Matrix
                         new IDN(),
                         new MicType(),
                         new MicSens(),
-                        //new LAEQ(),
+                        new LAEQ(),
                         new LAFMAX(),
                         new LAFMIN(),
                         new LAF01(),
@@ -387,6 +387,7 @@ namespace Matrix
         public string MicType{ get; set; }
         public string MeasureStatus{ get; set; }
         public string MicSens{ get; set; }
+        public string Firmware { get; set; }
 }
 
 }
