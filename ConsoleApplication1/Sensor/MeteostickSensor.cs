@@ -27,12 +27,10 @@ namespace Matrix.Sensors
 
         private string LastLine;
 
-        private int x;
-
         public MeteostickSensor(List<MeteostickSensorMetric> metrics)
         {
             MetricsToRead = metrics;
-            
+
 
 
             foreach (ManagementObject device in new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_SerialPort").Get())
@@ -50,35 +48,37 @@ namespace Matrix.Sensors
                     MeteoComPort = new SerialPort("COM5", 115200);
                     Console.WriteLine(MeteoComPort.PortName);
                 }
-                MeteoComPort.Open();
-                MeteoComPort.WriteLine("r");
-                //System.Threading.Thread.Sleep(200);
-                LastLine = MeteoComPort.ReadLine();
-                Console.WriteLine(LastLine);
-                MeteoComPort.WriteLine("t64");
-                //System.Threading.Thread.Sleep(200);
-                LastLine = MeteoComPort.ReadLine();
-                Console.WriteLine(LastLine);
-                MeteoComPort.WriteLine("m2");
-                //System.Threading.Thread.Sleep(200);
-                LastLine = MeteoComPort.ReadLine();
-                Console.WriteLine(LastLine);
-                MeteoComPort.WriteLine("f1");
-                //System.Threading.Thread.Sleep(200);
-                LastLine = MeteoComPort.ReadLine();
-                Console.WriteLine(LastLine);
-                MeteoComPort.WriteLine("o2");
-                //System.Threading.Thread.Sleep(200);
-                LastLine = MeteoComPort.ReadLine();
-                Console.WriteLine(LastLine);
-                //foreach (var i in Enumerable.Range(0, 50))
-                //{
-                //    LastLine = ComPort.ReadLine();
-                //    Console.WriteLine(LastLine);
-                //}
-                Console.WriteLine("MeteoStick Initialisation Finished");
-                
             }
+
+            MeteoComPort.Open();
+            MeteoComPort.WriteLine("r");
+            //System.Threading.Thread.Sleep(200);
+            LastLine = MeteoComPort.ReadLine();
+            Console.WriteLine(LastLine);
+            MeteoComPort.WriteLine("t64");
+            //System.Threading.Thread.Sleep(200);
+            LastLine = MeteoComPort.ReadLine();
+            Console.WriteLine(LastLine);
+            MeteoComPort.WriteLine("m2");
+            //System.Threading.Thread.Sleep(200);
+            LastLine = MeteoComPort.ReadLine();
+            Console.WriteLine(LastLine);
+            MeteoComPort.WriteLine("f1");
+            //System.Threading.Thread.Sleep(200);
+            LastLine = MeteoComPort.ReadLine();
+            Console.WriteLine(LastLine);
+            MeteoComPort.WriteLine("o2");
+            //System.Threading.Thread.Sleep(200);
+            LastLine = MeteoComPort.ReadLine();
+            Console.WriteLine(LastLine);
+            //foreach (var i in Enumerable.Range(0, 50))
+            //{
+            //    LastLine = ComPort.ReadLine();
+            //    Console.WriteLine(LastLine);
+            //}
+            Console.WriteLine("MeteoStick Initialisation Finished");
+            
+            
         }
 
         protected override void CommenceMeasurement()

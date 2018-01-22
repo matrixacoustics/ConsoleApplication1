@@ -126,10 +126,32 @@ namespace Matrix
                 MeteostickSensor,
             };
 
+            //Parallelisation
+            //Timer = new Timer(1* 60 * 1000);
+            //Timer.Elapsed += OnTimer;
+            //Timer.Aut oReset = true;
+            //Timer.Enabled = true;
 
-            Timer = new Timer(1* 60 * 1000);
-            Timer.Elapsed += OnTimer;
+            Task goPoll = Task.Factory.StartNew(() => StartPoll());
+            Task goTimer = Task.Factory.StartNew(() => StartTimer());
+
+
+        }
+
+        public void StartPoll()
+        {
+            Console.WriteLine("Start Poll Started");
+            Timer = new Timer(5 * 60 * 1000);
             Timer.Elapsed += OnPoll;
+            Timer.AutoReset = true;
+            Timer.Enabled = true;
+        }
+
+        public void StartTimer()
+        {
+            Console.WriteLine("Start Timer Started");
+            Timer = new Timer(15 * 60 * 1000);
+            Timer.Elapsed += OnTimer;
             Timer.AutoReset = true;
             Timer.Enabled = true;
         }
