@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Management;
 
 namespace Matrix.Sensors
 {
@@ -22,22 +23,78 @@ namespace Matrix.Sensors
     {
         private MeteosticSensorReading _lastReading;
         private List<MeteostickSensorMetric> MetricsToRead;
-        private SerialPort ComPort;
+        private SerialPort MeteoComPort;
+
+        private string LastLine;
+
+        private int x;
 
         public MeteostickSensor(List<MeteostickSensorMetric> metrics)
         {
             MetricsToRead = metrics;
-        }
             
-        protected override void CommenceMeasurement()
-        {
-            base.CommenceMeasurement();
+
+
+            foreach (ManagementObject device in new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_SerialPort").Get())
+            {
+                // Select device based on VendorID.
+                if (device["PNPDeviceID"].ToString().Contains("VID_0403"))
+                {
+                    MeteoComPort = new SerialPort(device["DeviceID"].ToString());
+                    Console.WriteLine("created Meteostick port");
+                    Console.WriteLine(MeteoComPort.PortName);
+                }
+                else
+                {
+                    Console.WriteLine("didn't find Meteostick Port");
+                    MeteoComPort = new SerialPort("COM5", 115200);
+                    Console.WriteLine(MeteoComPort.PortName);
+                }
+                MeteoComPort.Open();
+                MeteoComPort.WriteLine("r");
+                //System.Threading.Thread.Sleep(200);
+                LastLine = MeteoComPort.ReadLine();
+                Console.WriteLine(LastLine);
+                MeteoComPort.WriteLine("t64");
+                //System.Threading.Thread.Sleep(200);
+                LastLine = MeteoComPort.ReadLine();
+                Console.WriteLine(LastLine);
+                MeteoComPort.WriteLine("m2");
+                //System.Threading.Thread.Sleep(200);
+                LastLine = MeteoComPort.ReadLine();
+                Console.WriteLine(LastLine);
+                MeteoComPort.WriteLine("f1");
+                //System.Threading.Thread.Sleep(200);
+                LastLine = MeteoComPort.ReadLine();
+                Console.WriteLine(LastLine);
+                MeteoComPort.WriteLine("o2");
+                //System.Threading.Thread.Sleep(200);
+                LastLine = MeteoComPort.ReadLine();
+                Console.WriteLine(LastLine);
+                //foreach (var i in Enumerable.Range(0, 50))
+                //{
+                //    LastLine = ComPort.ReadLine();
+                //    Console.WriteLine(LastLine);
+                //}
+                Console.WriteLine("MeteoStick Initialisation Finished");
+                
+            }
         }
 
-        protected override void CompleteMeasurement()
-        {
-            base.CompleteMeasurement();
-        }
+        protected override void CommenceMeasurement()
+            {
+                Console.WriteLine ("Meteostick Commenced Measurement");
+                foreach (var i in Enumerable.Range(0, 50))
+                {
+                    LastLine = MeteoComPort.ReadLine();
+                    Console.WriteLine(LastLine);
+                }
+            }
+
+            protected override void CompleteMeasurement()
+            {
+                Console.WriteLine ("Meteostick Completed Measurement");
+            }
 
         protected override SensorReading ReadValues()
         {
@@ -56,8 +113,8 @@ namespace Matrix.Sensors
         }
         private string GetMeasurement(MeteostickSensorMetric metric)
         {
-            ComPort.Write(metric.Command);
-            return ComPort.ReadLine();
+            MeteoComPort.Write(metric.Command);
+            return MeteoComPort.ReadLine();
         }
     }
     
