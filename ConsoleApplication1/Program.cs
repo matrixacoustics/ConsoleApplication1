@@ -46,11 +46,15 @@ namespace Matrix
 
         // The sensors in this logger
         public DavisWeatherSensor DavisWeatherSensor;
+        public MeteostickSensor MeteostickSensor;
         public FineOffsetWeatherSensor FineOffsetWeatherSensor;
         public XL2 XL2;
 
         // a sensors collection
         public List<Sensor> Sensors;
+
+        // Sensors that poll to device rather than being polled
+        public List<Sensor> SensorsPoll;
 
         // dispatches events to schedule
         public Timer Timer;
@@ -61,6 +65,15 @@ namespace Matrix
             // if (ConfigurationManager.AppSettings["HasDavisWeatherSensor"] == true) 
             DavisWeatherSensor = new DavisWeatherSensor();
             FineOffsetWeatherSensor = new FineOffsetWeatherSensor();
+
+            MeteostickSensor = new MeteostickSensor(
+                metrics: new List<MeteostickSensorMetric>
+                {
+                    new windSpeed(),
+                }
+                );
+
+            //XL2 logger
             XL2 = new XL2(
                     metrics: new List<XL2Metric>
                     {
@@ -102,15 +115,46 @@ namespace Matrix
 
             Sensors = new List<Sensor>()
             {
-                DavisWeatherSensor,
-                FineOffsetWeatherSensor,
+                //DavisWeatherSensor,
+                //FineOffsetWeatherSensor,
+                //MeteostickSensor,
                 XL2,
             };
 
-            Timer = new Timer(5 * 1000);
+            SensorsPoll = new List<Sensor>()
+            {
+                MeteostickSensor,
+            };
+
+
+            Timer = new Timer(1* 60 * 1000);
             Timer.Elapsed += OnTimer;
+            Timer.Elapsed += OnPoll;
             Timer.AutoReset = true;
             Timer.Enabled = true;
+        }
+
+        public void OnPoll(Object source, ElapsedEventArgs eventArgs)
+        {
+            Console.WriteLine("Poll triggered");
+            try
+            {
+                Console.WriteLine("Trying to get serial port to read values");
+                foreach (var p in SensorsPoll)
+                {
+                    Console.WriteLine ("I have found this sensor: " + p);
+                    SensorsPoll.ForEach(x => x.CompleteMeasurementPeriod());
+                    //System.Threading.Thread.Sleep(500);
+                    SensorsPoll.ForEach(x => x.CommenceMeasurementPeriod());
+                }
+
+  
+                //ComPort.Readline();
+            }
+            catch (Exception)
+            {
+                // write about exception here.
+            }
         }
 
         public void OnTimer(Object source, ElapsedEventArgs eventArgs)
@@ -120,7 +164,7 @@ namespace Matrix
             try
             {
                 Sensors.ForEach(x => x.CompleteMeasurementPeriod());
-                System.Threading.Thread.Sleep(500);
+                //System.Threading.Thread.Sleep(500);
                 Sensors.ForEach(x => x.CommenceMeasurementPeriod());
 
                 foreach (var s in Sensors)
@@ -175,7 +219,7 @@ namespace Matrix
 
                         foreach (var x in xl2Reading.MetricReadings)
                         {
-                            Console.WriteLine(x.Metric.GetType().Name);
+                            //Console.WriteLine(x.Metric.GetType().Name);
                             foreach (string m in measChannels)
                             {
                                 //Console.WriteLine(n);
@@ -198,11 +242,11 @@ namespace Matrix
                                                         {
                                                             //Console.WriteLine(x.Metric.GetType().Name);
                                                             //Console.WriteLine(x.Measurement);
-                                                            Console.WriteLine(m + n + o + p);
+                                                            //Console.WriteLine(m + n + o + p);
                                                             List<string> q = x.Measurement.Split(',').ToList<string>();
                                                             measStat = q[1];
                                                             //Console.WriteLine(measStat);
-                                                            Console.WriteLine(char.ToString(measStat[0]));
+                                                            //Console.WriteLine(char.ToString(measStat[0]));
                                                             specPost.Add(new XL2Spectrum()
                                                             {
                                                                 XL2id = 1,
@@ -213,7 +257,7 @@ namespace Matrix
                                                             }
                                                             );
 
-                                                            specPost.ForEach(Console.WriteLine);
+                                                            //specPost.ForEach(Console.WriteLine);
 
                                                         }
                                                     }
